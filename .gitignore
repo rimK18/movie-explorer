@@ -1,0 +1,7 @@
+# Ignorer les fichiers sensibles et inutiles
+bigquery-key.json
+__pycache__/
+*.log
+.DS_Store
+google-cloud-sdk/
+
