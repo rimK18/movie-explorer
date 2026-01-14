@@ -1,11 +1,34 @@
-# Ignorer les fichiers sensibles et inutiles
-bigquery-key.json
-__pycache__/
-*.log
-.DS_Store
-google-cloud-sdk/
-
-
-# Secrets
+# Secrets et credentials
 bigquery-key.json
 .env
+*.json
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+venv/
+env/
+.Python
+
+# Système
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+
+# Dossiers locaux
+google-cloud-sdk/
+.install/
+bin/
+
+# Logs
+*.log
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo

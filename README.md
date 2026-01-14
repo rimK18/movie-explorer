@@ -1,123 +1,147 @@
-🎬 Movie Explorer
+# Movie Explorer — Cloud Data Web Application
 
-📌 Description du projet
+## Overview
 
-Movie Explorer est une application web permettant aux utilisateurs de rechercher des films en interrogeant une base de données BigQuery sur Google Cloud.
+**Movie Explorer** is a cloud-based web application that allows users to explore a movie catalog using SQL queries on Google BigQuery, combined with an interactive Streamlit interface.
 
-Elle offre une interface utilisateur interactive développée avec Streamlit, permettant d’effectuer des recherches avancées grâce à divers filtres :
+The project was developed in an academic context to demonstrate end-to-end cloud application design, from data querying to deployment.
 
-✔️ Recherche par titre (avec autocomplétion)
-✔️ Filtrage par langue
-✔️ Filtrage par genre
-✔️ Filtrage par note moyenne des spectateurs
-✔️ Filtrage par année de sortie
+---
 
-Lorsque l’utilisateur sélectionne un film, l’application affiche des détails supplémentaires (synopsis, affiche, casting) grâce à l’API de The Movie Database (TMDB).
+## What this project demonstrates
 
-L’application est dockerisée et déployée sur Google Cloud Run, permettant un accès facile via une URL publique.
+This project focuses on **architecture and engineering skills** rather than data ownership.
 
-🚀 Lien vers l'application déployée
+It demonstrates the ability to:
 
-Service URL : https://movie-explorer-200462783381.europe-west6.run.app
+* Query analytical datasets using **BigQuery SQL** (joins, aggregations, filters)
+* Build interactive data applications with **Streamlit**
+* Integrate an external **REST API** (The Movie Database)
+* Containerize an application with **Docker**
+* Deploy a serverless service on **Google Cloud Run**
+* Manage configuration and secrets using environment variables
 
-L’application est hébergée sur Google Cloud Run et est accessible publiquement.
+---
 
-⚙️ Installation et Exécution en Local
+## Key Features
 
-🔧 Prérequis
-Avant d'exécuter l'application localement, assurez-vous d’avoir installé :
+**Movie search with SQL-based filtering:**
+* Title (text search)
+* Language
+* Genre
+* Release year
+* Minimum average rating (JOIN + aggregation)
 
-✔️ Python 3.9+
-✔️ Docker
-✔️ Google Cloud SDK
-✔️ Un projet Google Cloud avec BigQuery configuré
+**Movie detail view:**
+* Synopsis
+* Poster
+* Metadata retrieved from **The Movie Database (TMDB) API**
 
-📥 Cloner le projet
+**Dockerized application**
 
-sh
-Copier
-Modifier
-git clone https://github.com/rimK18/movie-explorer.git
-cd movie-explorer
-📦 Installer les dépendances
+**Cloud deployment on Google Cloud Run**
 
-sh
-Copier
-Modifier
+---
+
+## High-Level Architecture
+
+```
+User
+↓
+Streamlit UI
+↓
+BigQuery (movies and ratings)
+↓
+TMDB API (movie details)
+```
+
+**Deployment:**
+* Docker container
+* Google Cloud Run (serverless)
+
+---
+
+## Dataset and Availability
+
+This application was originally built using a Google BigQuery dataset (movies and ratings) provided during an academic course.
+
+⚠️ **The original BigQuery tables are not included in this repository and may no longer be publicly available.**
+
+The purpose of this repository is to showcase:
+* Query logic
+* Cloud architecture
+* Application structure
+* Deployment strategy
+
+Running the application locally or in the cloud **requires access to a compatible BigQuery dataset** with the expected schema.
+
+---
+
+## Local Setup (Optional)
+
+**Prerequisites:**
+* Python 3.9 or higher
+* Docker
+* Google Cloud SDK
+* Access to a Google Cloud project with BigQuery enabled
+
+**Environment Variables:**
+
+```bash
+TMDB_API_KEY=your_tmdb_key
+GOOGLE_APPLICATION_CREDENTIALS=path/to/key.json
+GCP_PROJECT_ID=movie-project-453208
+BQ_MOVIES_TABLE=movie-project-453208.movies_dataset.movies
+BQ_RATINGS_TABLE=movie-project-453208.ratings_dataset.ratings
+```
+
+**Run Locally:**
+
+```bash
 pip install -r requirements.txt
-🔑 Configurer les identifiants Google Cloud
+python -m streamlit run app/main.py
+```
 
-Assurez-vous d’avoir un fichier d’authentification pour BigQuery et définissez la variable d’environnement correspondante :
+If BigQuery is not available, the application displays a clear message instead of failing silently.
 
-sh
-Copier
-Modifier
-export GOOGLE_APPLICATION_CREDENTIALS="bigquery-key.json"
-▶️ Lancer l’application localement
+---
 
-sh
-Copier
-Modifier
-streamlit run app.py
-L’application sera accessible à l’adresse suivante :
-➡️ http://localhost:8501
+## Run with Docker
 
-🐳 Exécution avec Docker
+```bash docker build -t movie-explorer . docker run -p 8080:8080 movie-explorer ```
 
-📦 Construire l’image Docker
+Access the application at: **http://localhost:8080\*\*
 
-sh
-Copier
-Modifier
-docker build -t movie-explorer .
-▶️ Exécuter le conteneur
+---
 
-sh
-Copier
-Modifier
-docker run -p 8080:8080 movie-explorer
-L’application sera accessible à l’adresse suivante :
-➡️ http://localhost:8080
+## Cloud Deployment (Google Cloud Run)
 
-🚀 Déploiement sur Google Cloud Run
+```bash
+docker tag movie-explorer gcr.io/<PROJECT_ID>/movie-explorer
+docker push gcr.io/<PROJECT_ID>/movie-explorer
 
-📤 Pousser l’image sur Google Container Registry
+gcloud run deploy movie-explorer
+--image gcr.io/<PROJECT_ID>/movie-explorer
+--platform managed
+--region europe-west6
+--allow-unauthenticated ```
 
-sh
-Copier
-Modifier
-docker tag movie-explorer gcr.io/movie-project-453208/movie-explorer:latest
-docker push gcr.io/movie-project-453208/movie-explorer:latest
-🌍 Déployer sur Cloud Run
+---
 
-sh
-Copier
-Modifier
-gcloud run deploy movie-explorer \
-  --image gcr.io/movie-project-453208/movie-explorer:latest \
-  --platform managed \
-  --region europe-west6 \
-  --allow-unauthenticated
-L’application sera accessible via l’URL affichée après le déploiement.
+## Technology Stack
 
-🔍 Fonctionnalités Implémentées
+* **Python 3.9**
+* **Google BigQuery**
+* **Streamlit**
+* **Docker**
+* **Google Cloud Run**
+* **The Movie Database (TMDB) API**
 
-✅ Autocomplétion des titres (SQL)
-✅ Filtrage par langue (SQL)
-✅ Filtrage par genre (SQL)
-✅ Filtrage par moyenne des notes (SQL + jointure avec les avis)
-✅ Filtrage par année de sortie (SQL)
-✅ Affichage des résultats avec détails et affiches via TMDB
-✅ Déploiement sur Google Cloud Run avec Docker
+---
 
-🛠 Technologies utilisées
+## Context
 
-BigQuery → Stockage des films et avis
-Google Cloud Run → Déploiement de l’application
-Streamlit → Interface utilisateur
-Docker → Containerisation
-Python & Pandas → Traitement des données
-TMDB API → Récupération des détails des films
-📝 Auteurs
+Academic project developed as part of the course **Cloud and Advanced Analytics — 2025**
 
-📌 Projet réalisé par Karim Bellamri dans le cadre du cours Cloud & Advanced Analytics 2025.
+**Author:** Karim Bellamri
+
